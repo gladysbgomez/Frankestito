@@ -1,0 +1,9 @@
+{
+<<<<<<< HEAD
+    "liveServer.settings.port": 5501
+=======
+    "favorites.resources": [
+        "web/websocketclientjoystick"
+    ]
+>>>>>>> cliente-joystick
+}

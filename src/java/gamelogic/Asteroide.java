@@ -27,7 +27,7 @@ public class Asteroide extends Entity {//Ball.java
     
     //atributos agregados para resolver cuanto_color(c)
     protected Vector2 direccion;
-    protected double angulo;
+    protected double angulo; // no tiene valor????
 
     public Asteroide(String name, boolean destroy, String id, double x, double y, double velocidadX, double velocidadY, int worldWidth,int worldHeight, 
                      String color/*, double xDir, double yDir*/) {

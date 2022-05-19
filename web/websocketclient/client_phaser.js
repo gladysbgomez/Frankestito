@@ -254,6 +254,7 @@ function particle(ship, id) {
             onEmit: function (particle, key, t, value) {
                 var v = Phaser.Math.Between(-10, 10);
                 return (ship.angle - 180) + v;
+                //return (ship.angle - 90) + v;
             }
         },
         scale: {start: (ship.width / (width * 0.30)), end: 0},
@@ -327,7 +328,7 @@ window.onload = function () {
                     players[id].scaleY = players[id].width / (width * 0.25);
 
                     if (particles !== undefined) {
-                        particle(players[id], id);
+                        particle(players[id], id);//provoca la rotación de la imagen??
                     }
                 }
                 /* cargo puntaje en tabla de puntaje */

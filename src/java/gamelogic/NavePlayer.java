@@ -98,7 +98,8 @@ public class NavePlayer extends Nave {
                     double xFuturaAsteroide = ast.x + ast.velocidad.x;
                     double yFuturaAsteroide = ast.y + ast.velocidad.y;
                     if (futuraPos[0] == xFuturaAsteroide && futuraPos[1] == yFuturaAsteroide) {
-                        this.addEvent("hit");
+                        //this.addEvent("hit");
+                        System.out.println("choca  un objeto");
                     }
                 } else if (estado != this && estado.getName().equalsIgnoreCase("proyectil")) { // Choque contra proyectil
                     Proyectil proj = (Proyectil) estado;
@@ -295,6 +296,8 @@ public class NavePlayer extends Nave {
                                             nuevaVelY = -1*direccion.y * (velocidad_movimiento*tiempo_movimiento);
                                             nuevoX = nuevoX + nuevaVelX;
                                             nuevoY = nuevoY + nuevaVelY;
+                                            
+                                            //no se modifica la dirección, sino sólo la posición
                                         } 
                                         catch (IOException ex) {
                                             Logger.getLogger(NavePlayer.class.getName()).log(Level.SEVERE, null, ex);
@@ -456,8 +459,8 @@ public class NavePlayer extends Nave {
             boolean revivir = false;
             for (String evento : eventos) {
                 switch (evento) {
-                    case "hit":
-                        if (!bloqueado) {
+                    case "hit":                        
+                        /*if (!bloqueado) {
                             nuevaVida = nuevaVida + 1;
                             System.out.println(nuevaVida);
                             if (nuevaVida <= 0) {
@@ -466,16 +469,19 @@ public class NavePlayer extends Nave {
                                 muerto = true;
                                 nuevoPuntaje=nuevoPuntaje+1;
                             }
-                        }
+                        }*/
+                        System.out.println("Hit. Dirección: " +  nuevaDirX + " , " + nuevaDirY);
                         break;
                     //ver colisiones
                     case "collide":
-                        if (!revivir) {
+                        /*if (!revivir) {
                             nuevaVelX = velocidad.x;
                             nuevaVelY = velocidad.y;
                             nuevoX = x;
                             nuevoY = y;
-                        }
+                        
+                        }*/
+                        System.out.println("collide");
                         break;
                     case "collect":
                         nuevoPuntaje = nuevoPuntaje + 10; 

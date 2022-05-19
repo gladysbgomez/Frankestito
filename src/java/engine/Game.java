@@ -51,6 +51,8 @@ public class Game implements Runnable {
     //es el ángulo que se suma y se resta al ángulo del robot para formar el cono de detección de objetos
     double angulo_cono = 0.5; // 0.5 //1
     
+    double desvio = 1.0;
+    
     //valor de la concentración del color cuando se detecta un objeto del color solicitado frente al robot referencia
     double concentracion_frontal = 80;
     
@@ -408,7 +410,7 @@ public class Game implements Runnable {
                             porcentaje_cuanto_color = porcentaje_asteroide;
                         }
                         
-                        if(porcentaje_cuanto_color>=porcentaje)
+                        if(porcentaje_cuanto_color>=porcentaje)//comentar este if pues no se entiende para qué está
                         {
                             continuar=false;
                         }
@@ -518,8 +520,8 @@ public class Game implements Runnable {
     private boolean dentro_del_area(double angulo_obj, double distancia_obj, double angulo_direccion)//REVISAR!!!!!
     {//tener en cuenta la dirección del jugador
         //double angulo_jugador=0;//pues las posiciones fueron recalculadas respecto al jugador
-        double angulo_min = angulo_0_a_360(angulo_direccion - angulo_cono); //angulo_0_a_360(2*Math.PI +(angulo_jugador - angulo_cono));
-        double angulo_max = angulo_0_a_360(angulo_direccion + angulo_cono); //angulo_0_a_360(angulo_jugador + angulo_cono);
+        double angulo_min = angulo_0_a_360(angulo_direccion - angulo_cono) + desvio; //angulo_0_a_360(2*Math.PI +(angulo_jugador - angulo_cono));
+        double angulo_max = angulo_0_a_360(angulo_direccion + angulo_cono) + desvio; //angulo_0_a_360(angulo_jugador + angulo_cono);
         
         //concentracion += " - angulo_min:" + angulo_min + " angulo_max:" + angulo_max;
         
@@ -605,7 +607,9 @@ public class Game implements Runnable {
                 //concentracion += a.name + " " + a.get_color();
                 if(a.get_color().equalsIgnoreCase(color))
                 {                 
-                    double angulo_asteroide = a.getAngulo();
+                    double angulo_asteroide = a.getAngulo(); //este valor se completa en el detectar objetos, después de raclcuar las posiciones de los objetos respecto al robot
+                    //por lo tanto devuelve un ángulo respecto al robot
+                    
                     /*concentracion += " angulo:" + angulo_asteroide;
                     
                     pos_x_asteroide = a.getX();
@@ -617,18 +621,18 @@ public class Game implements Runnable {
                     
                     if(dentro_del_area(angulo_asteroide,distancia_asteroide))
                     {*/
-                        double concentracion_asteroide = concentracion_color(angulo_asteroide, angulo_direccion);
+                        double concentracion_asteroide = concentracion_color(angulo_asteroide, angulo_direccion);//verificar si utiliza la distancia para el cálculo de la concentración porque debería hacerlo
                         
-                        if(concentracion_asteroide>concentracion_buscar_color)
+                        if(concentracion_asteroide>concentracion_buscar_color) 
                         {
                             concentracion_buscar_color = concentracion_asteroide;
                             //continuar=false;//puede que se detenga al primer detectado
                         }
                         
-                        if(concentracion_buscar_color>=concentracion_max)
+                        /*if(concentracion_buscar_color>=concentracion_max) //comentar este if pues no se entiende para qué está
                         {
                             continuar=false;
-                        }
+                        }*/
                     //}                                        
                 }                
                 i++;
@@ -687,7 +691,8 @@ public class Game implements Runnable {
     }
     
     private LinkedList<Asteroide> convertir(LinkedList<Asteroide> asteroides, double pos_x_jugador, double pos_y_jugador, double angulo_jugador)
-    {
+    {//recalcula las posiciones de los asteroides respecto de la posición del jugador y calcula el ángulo que forma el asteroide respecto al nuevo origen de coordenadas que es
+        //la posición del jugador
         LinkedList<Asteroide> objetos = new LinkedList<Asteroide>();
         
         int cant = asteroides.size();
@@ -702,7 +707,7 @@ public class Game implements Runnable {
             double vx = v.x;
             double vy = v.y;
             Asteroide ac = new Asteroide(a.name, a.destroy, a.id, x, y, vx, vy, a.getWorldWidth(), a.getWorldHeight(), a.get_color());             
-            //se obtiene el ángulo que forma el punto de la posición del objeto, recalculada, respecto al nuevo origen que es la pocisión del robot 
+            //se obtiene el ángulo que forma el punto de la posición del objeto, recalculada, respecto al nuevo origen que es la posición del robot 
             double angulo_asteroide = angulo_al_origen(x,y); //angulo_al_punto(x, y, angulo_jugador);
             ac.setAngulo(angulo_asteroide); 
             
@@ -738,21 +743,24 @@ public class Game implements Runnable {
         //Y LO UNICO QUE CAMBIA ES EL ORIGEN
         double c = 80;
         
-        if(un_angulo==angulo_direccion)
-        {
+        if(un_angulo == angulo_direccion)
+        {//concentracion = 80
             return c;
         }
         else
         {
-            if(un_angulo<angulo_direccion)
-            {
-                c = un_angulo % 80;
+            if(un_angulo < angulo_direccion)
+            {//80 < concentracion <= 160
+                //c = un_angulo % c;
+                c = un_angulo % (c + 1) + c;
                 
                 return c;
             }
             else
-            {
-                c=un_angulo % 81+80;
+            {//un_angulo > angulo_direccion => 0 <= concentracion < 80
+                //c = un_angulo % (c + 1) + c;
+                c = un_angulo % c;
+                
                 return c;
             }                
         }
